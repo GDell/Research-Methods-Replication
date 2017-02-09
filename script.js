@@ -10,7 +10,6 @@ function script() {
 
   RedimgArrayT[0] = 'images/Red/T/L.png';
   RedimgArrayT[1] = 'images/Red/T/R.png';
-  ///////////////////////////////////////////////
 
   /////////////////////// Blue stimuli
   var BlueimgArrayL = new Array();
@@ -23,7 +22,6 @@ function script() {
 
   BlueimgArrayT[0] = 'images/Blue/T/L.png';
   BlueimgArrayT[1] = 'images/Blue/T/R.png';
-  /////////////////////////////////////////////
 
   /////////////////////// Green Stimuli
   var GreenimgArrayL = new Array();
@@ -36,7 +34,6 @@ function script() {
 
   GreenimgArrayT[0] = 'images/Green/T/L.png';
   GreenimgArrayT[1] = 'images/Green/T/R.png';
-  //////////////////////////////////////////////
 
   ///////////////////////  Yellow Stimuli
   // Yellow L Stimuli (4 Total)
@@ -49,10 +46,9 @@ function script() {
 
   // Yellow T Stimuli (2 Total)
   var YellowimgArrayT = new Array();
-  //
+
   YellowimgArrayT[0] = 'images/Yellow/T/L.png';
   YellowimgArrayT[1] = 'images/Yellow/T/R.png';
-  ///////////////////////////////////////////////
   
   var cols = 8; 
   var rows = 6; 
@@ -65,56 +61,53 @@ function script() {
   var theImage = YellowimgArrayL[random]; //returning random letter
   console.log(theImage);
 
-  function inCheck(number, imageSRC) {
-   if (counter == number) {
+  // The following function checks whether a number exists within an 
+  // array. If it does, it returns that number.
+  function inArray(number, myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+      if (number == myArray[i])
+          return true;
+    }
+    return false;
+  }
+
+
+  // Check whether the the chosen img id# matches that of the iteration its 
+  // made.
+  function inCheck(imageSRC, myArray) {
+   if (inArray(counter, myArray)) {
     return imageSRC;
    } else {
     return "";
    }
   }
 
-  function generateScene(number) {
 
+
+  // INPUT: array, imageSRC
+  // OUTPUT: A scene with an image in all of the img id's specified in the 
+  // input array.
+  function generateScene(array, imageSRC) {
     for(var i =0; i < rows; i++) { 
-
       html += '<div class="row">';
-
       for(var h=0; h< cols; h++) { 
-         // var random = parseInt(Math.random()*characters.length);
 
-            var result = inCheck(number, theImage);
-            // console.log("result: " + result);
+         var imgresult = inCheck(imageSRC, array);
 
-         html += "<div class='square'>"+ "<div class='innerSquare'>" + '<img id="'+counter+'" src="'+result+'"></img>' + '</div>' + '</div>'; 
 
+         html += "<div class='square'>"+ "<div class='innerSquare'>" + '<img id="'+counter+'" src="'+imgresult+'"></img>' + '</div>' + '</div>'; 
          counterArray[counter] = counter;
          // console.log(counterArray);
          counter = counter + 1;
       } 
         html += '</div>'; 
-
     } 
-
   }
+  var exampleArray = ["1","2","3","4","20"];
+
+  generateScene(exampleArray, theImage);
 
 
-      // document.getElementById("1").src=theImage
-
-  generateScene(4);
-
-
-
-  // function fillScene () {
-
-  //   var random = parseInt(Math.random()*YellowimgArrayL.length)
-  //   var theImage = YellowimgArrayL[random]; //returning random letter
-
-  //   document.getElementById("1").src= theImage;
-
-
-  // }
-
-  // fillScene();
 
   // Choose the 24 TARGET positions
   var TchosenPositions = jsPsych.randomization.sample(counterArray, 24);
