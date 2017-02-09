@@ -80,28 +80,27 @@ function script() {
   function inArray(number, myArray) {
     for (var i = 0; i < myArray.length; i++) {
       if (number == myArray[i])
-          return true;
+        return true;
     }
     return false;
   }
 
   function inCheck(imageSRC, myArray) {
-
-   if (imageSRC == "t"){
-    if (inArray(counter, myArray)) {
-    var randomTstim = parseInt(Math.random()*allTStim.length);
-    var randomT = allTStim[randomTstim];
-    return randomT;
-    } else {
-    return "";
-    }
-   } else {
+    if (imageSRC == "t"){
       if (inArray(counter, myArray)) {
-      var randomLstim = parseInt(Math.random()*allLStim.length);
-      var randomL = allLStim[randomLstim];
-      return randomL;
+        var randomTstim = parseInt(Math.random()*allTStim.length);
+        var randomT = allTStim[randomTstim];
+        return randomT;
       } else {
-      return "";
+        return "";
+      }
+    } else {
+      if (inArray(counter, myArray)) {
+        var randomLstim = parseInt(Math.random()*allLStim.length);
+        var randomL = allLStim[randomLstim];
+        return randomL;
+      } else {
+        return "";
       }
     }
   }
@@ -118,31 +117,28 @@ function script() {
   var lPositions = twelvePositions.slice(1,12);
   console.log("lPositions = "+ lPositions);
 
+  var objectsceneName = '{"scenes": []}';
+  var parsedSceneName = JSON.parse(objectsceneName);
+
   // INPUT: array, imageSRC
   // OUTPUT: A scene with an image in all of the img id's specified in the 
   // input array.
-  function generateScene(Larray, Tposition) {
+  function generateScene(Larray, Tposition, sceneName) {
     for(var i =0; i < rows; i++) { 
       html += '<div class="row">';
       for(var h=0; h< cols; h++) { 
-
          var imgresult = inCheck("l", Larray) || inCheck("t", Tposition);
-
          html += "<div class='square'>"+ "<div class='innerSquare'>" + '<img id="'+counter+'" src="'+imgresult+'"></img>' + '</div>' + '</div>';
          counterArray[counter] = counter;
          // console.log(counterArray);
-
          counter = counter + 1;
       } 
         html += '</div>'; 
-
     }
 
-    // Save the scene
-    // htmlRecord.push(html);
-    // console.log(html)
-
-    
+    // Save the scene in the scene JSON onbject
+    parsedSceneName.scenes.sceneName = html;
+    console.log(parsedSceneName);
   }
   // var generalScene = '<div id="scene">' + html +  '</div>'; 
 
@@ -150,7 +146,7 @@ function script() {
 
 
 
-  generateScene(lPositions, tPosition);
+  generateScene(lPositions, tPosition, "EXAMPLE");
 
   var generalScene = '<div id="scene">' + html +  '</div>';
 
