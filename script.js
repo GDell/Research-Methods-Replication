@@ -2,64 +2,78 @@ function script() {
   /////////////////////// Red Stimuli
   var RedimgArrayL = new Array();
   var RedimgArrayT = new Array();
-
+  // L
   RedimgArrayL[0] = 'images/Red/L/0.png';
   RedimgArrayL[1] = 'images/Red/L/180.png';
   RedimgArrayL[2] = 'images/Red/L/90.png';
   RedimgArrayL[3] = 'images/Red/L/270.png';
-
+  // T
   RedimgArrayT[0] = 'images/Red/T/L.png';
   RedimgArrayT[1] = 'images/Red/T/R.png';
 
   /////////////////////// Blue stimuli
   var BlueimgArrayL = new Array();
   var BlueimgArrayT = new Array();
-
+  // L
   BlueimgArrayL[0] = 'images/Blue/L/0.png';
   BlueimgArrayL[1] = 'images/Blue/L/180.png';
   BlueimgArrayL[2] = 'images/Blue/L/90.png';
   BlueimgArrayL[3] = 'images/Blue/L/270.png';
-
+  // T
   BlueimgArrayT[0] = 'images/Blue/T/L.png';
   BlueimgArrayT[1] = 'images/Blue/T/R.png';
 
   /////////////////////// Green Stimuli
   var GreenimgArrayL = new Array();
   var GreenimgArrayT = new Array();
-
+  // L
   GreenimgArrayL[0] = 'images/Green/L/0.png';
   GreenimgArrayL[1] = 'images/Green/L/180.png';
   GreenimgArrayL[2] = 'images/Green/L/90.png';
   GreenimgArrayL[3] = 'images/Green/L/270.png';
-
+  // T
   GreenimgArrayT[0] = 'images/Green/T/L.png';
   GreenimgArrayT[1] = 'images/Green/T/R.png';
 
   ///////////////////////  Yellow Stimuli
   // Yellow L Stimuli (4 Total)
   var YellowimgArrayL = new Array();
-  //
+  var YellowimgArrayT = new Array();
+  // L
   YellowimgArrayL[0] = 'images/Yellow/L/0.png';
   YellowimgArrayL[1] = 'images/Yellow/L/180.png';
   YellowimgArrayL[2] = 'images/Yellow/L/90.png';
   YellowimgArrayL[3] = 'images/Yellow/L/270.png';
-
-  // Yellow T Stimuli (2 Total)
-  var YellowimgArrayT = new Array();
-
+  // T
   YellowimgArrayT[0] = 'images/Yellow/T/L.png';
   YellowimgArrayT[1] = 'images/Yellow/T/R.png';
   
+
+  // ALL L STIMULI
+  var allLStim = YellowimgArrayL.concat(BlueimgArrayL,GreenimgArrayL,RedimgArrayL);
+  var randomLstim = parseInt(Math.random()*allLStim.length);
+  var randomL = allLStim[randomLstim];
+
+  // ALL T STIMULI
+  var allTStim = YellowimgArrayT.concat(BlueimgArrayT,GreenimgArrayT,RedimgArrayT);
+  // console.log("all t stim is: "+ allTStim)
+  var randomTstim = parseInt(Math.random()*allTStim.length);
+  var randomT = allTStim[randomTstim];
+  // console.log("random is :"+randomTstim);
+
+  // Grid variable declarations
   var cols = 8; 
   var rows = 6; 
   var html = ""; 
   var counter = 0;
   var counterArray = new Array();
 
-  // The following arrays will be drawn from to create the needed scenes
+  var htmlRecord = new Array();
+
+  // The following arrays of imgs will be used to create the needed scenes
   var random = parseInt(Math.random()*YellowimgArrayL.length);
-  var theImage = YellowimgArrayL[random]; //returning random letter
-  console.log(theImage);
+  var theImage = YellowimgArrayL[random]; 
+  // console.log(theImage);
 
   // The following function checks whether a number exists within an 
   // array. If it does, it returns that number.
@@ -71,55 +85,85 @@ function script() {
     return false;
   }
 
-
-  // Check whether the the chosen img id# matches that of the iteration its 
-  // made.
   function inCheck(imageSRC, myArray) {
-   if (inArray(counter, myArray)) {
-    return imageSRC;
-   } else {
+
+   if (imageSRC == "t"){
+    if (inArray(counter, myArray)) {
+    var randomTstim = parseInt(Math.random()*allTStim.length);
+    var randomT = allTStim[randomTstim];
+    return randomT;
+    } else {
     return "";
-   }
+    }
+   } else {
+      if (inArray(counter, myArray)) {
+      var randomLstim = parseInt(Math.random()*allLStim.length);
+      var randomL = allLStim[randomLstim];
+      return randomL;
+      } else {
+      return "";
+      }
+    }
   }
 
+  // The follwing declares the 12 stimuli location for a scene
 
+  var referenceArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47];
+
+
+  var twelvePositions = jsPsych.randomization.sample(referenceArray, 12);
+  console.log("twelvePositions: "+ twelvePositions);
+  var tPosition = [twelvePositions[0]];
+  console.log("tPosition = "+ tPosition);
+  var lPositions = twelvePositions.slice(1,12);
+  console.log("lPositions = "+ lPositions);
 
   // INPUT: array, imageSRC
   // OUTPUT: A scene with an image in all of the img id's specified in the 
   // input array.
-  function generateScene(array, imageSRC) {
+  function generateScene(Larray, Tposition) {
     for(var i =0; i < rows; i++) { 
       html += '<div class="row">';
       for(var h=0; h< cols; h++) { 
 
-         var imgresult = inCheck(imageSRC, array);
+         var imgresult = inCheck("l", Larray) || inCheck("t", Tposition);
 
-
-         html += "<div class='square'>"+ "<div class='innerSquare'>" + '<img id="'+counter+'" src="'+imgresult+'"></img>' + '</div>' + '</div>'; 
+         html += "<div class='square'>"+ "<div class='innerSquare'>" + '<img id="'+counter+'" src="'+imgresult+'"></img>' + '</div>' + '</div>';
          counterArray[counter] = counter;
          // console.log(counterArray);
+
          counter = counter + 1;
       } 
         html += '</div>'; 
-    } 
+
+    }
+
+    // Save the scene
+    // htmlRecord.push(html);
+    // console.log(html)
+
+    
   }
+  // var generalScene = '<div id="scene">' + html +  '</div>'; 
+
   var exampleArray = ["1","2","3","4","20"];
 
-  generateScene(exampleArray, theImage);
 
+
+  generateScene(lPositions, tPosition);
+
+  var generalScene = '<div id="scene">' + html +  '</div>';
 
 
   // Choose the 24 TARGET positions
-  var TchosenPositions = jsPsych.randomization.sample(counterArray, 24);
-  console.log('All T positions: '+ TchosenPositions);
-  var oldTchosenPositions = TchosenPositions.slice(0,12);
-  console.log('Old: ' + oldTchosenPositions);
-  var newTchosenPositions = TchosenPositions.slice(12,25);
-  console.log('New: ' + newTchosenPositions);
+  // var TchosenPositions = jsPsych.randomization.sample(counterArray, 24);
+  // console.log('All T positions: '+ TchosenPositions);
+  // var oldTchosenPositions = TchosenPositions.slice(0,12);
+  // console.log('Old: ' + oldTchosenPositions);
+  // var newTchosenPositions = TchosenPositions.slice(12,25);
+  // console.log('New: ' + newTchosenPositions);
+  // console.log(counterArray);
 
-  console.log(counterArray);
-
-  var generalScene = '<div id="scene">' + html +  '</div>';
 
   var consentForm = {
     type: 'single-stim',
@@ -146,7 +190,7 @@ function script() {
 
   var node = {
     type: 'single-stim',
-    timeline: [ scene1],
+    timeline: [scene1],
   }
 
   jsPsych.init({
