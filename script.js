@@ -1,4 +1,21 @@
 function script() {
+
+  // Grid variable declarations
+  var cols = 8; 
+  var rows = 6; 
+  var html = ""; 
+  var counter = 0;
+  var counterArray = new Array();
+  var htmlRecord = new Array();
+
+  // Grid reference array
+  var referenceArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47];
+
+  // JSON object to hold generated scenes
+  var objectsceneName = '{"scenes": []}';
+  var parsedSceneName = JSON.parse(objectsceneName);
+
+  // STIMULI
   /////////////////////// Red Stimuli
   var RedimgArrayL = new Array();
   var RedimgArrayT = new Array();
@@ -61,20 +78,15 @@ function script() {
   var randomT = allTStim[randomTstim];
   // console.log("random is :"+randomTstim);
 
-  // Grid variable declarations
-  var cols = 8; 
-  var rows = 6; 
-  var html = ""; 
-  var counter = 0;
-  var counterArray = new Array();
+  // The follwing declares the 12 stimuli locations for a scene
+  var twelvePositions = jsPsych.randomization.sample(referenceArray, 12);
+  console.log("twelvePositions: "+ twelvePositions);
+  var tPosition = [twelvePositions[0]];
+  console.log("tPosition = "+ tPosition);
+  var lPositions = twelvePositions.slice(1,12);
+  console.log("lPositions = "+ lPositions);
 
-  var htmlRecord = new Array();
-
-  // The following arrays of imgs will be used to create the needed scenes
-  var random = parseInt(Math.random()*YellowimgArrayL.length);
-  var theImage = YellowimgArrayL[random]; 
-  // console.log(theImage);
-
+  // FUNCTION: inArray
   // The following function checks whether a number exists within an 
   // array. If it does, it returns that number.
   function inArray(number, myArray) {
@@ -85,6 +97,11 @@ function script() {
     return false;
   }
 
+  // FUNCTION: inCheck
+  // Checks whether the current loop counter matches 
+  // that of a stimulus coutner. 
+  // If it does, checks and places a random stimulus 
+  // image in that img box. 
   function inCheck(imageSRC, myArray) {
     if (imageSRC == "t"){
       if (inArray(counter, myArray)) {
@@ -105,22 +122,8 @@ function script() {
     }
   }
 
-  // The follwing declares the 12 stimuli location for a scene
-
-  var referenceArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47];
-
-
-  var twelvePositions = jsPsych.randomization.sample(referenceArray, 12);
-  console.log("twelvePositions: "+ twelvePositions);
-  var tPosition = [twelvePositions[0]];
-  console.log("tPosition = "+ tPosition);
-  var lPositions = twelvePositions.slice(1,12);
-  console.log("lPositions = "+ lPositions);
-
-  var objectsceneName = '{"scenes": []}';
-  var parsedSceneName = JSON.parse(objectsceneName);
-
-  // INPUT: array, imageSRC
+  // FUNCTION: generateScene
+  // INPUT: array, imageSRC, sceneName
   // OUTPUT: A scene with an image in all of the img id's specified in the 
   // input array.
   function generateScene(Larray, Tposition, sceneName) {
@@ -135,16 +138,12 @@ function script() {
       } 
         html += '</div>'; 
     }
-
     // Save the scene in the scene JSON onbject
     parsedSceneName.scenes.sceneName = html;
     console.log(parsedSceneName);
   }
-  // var generalScene = '<div id="scene">' + html +  '</div>'; 
 
   var exampleArray = ["1","2","3","4","20"];
-
-
 
   generateScene(lPositions, tPosition, "EXAMPLE");
 
