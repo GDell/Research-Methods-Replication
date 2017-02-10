@@ -79,12 +79,24 @@ function script() {
   // console.log("random is :"+randomTstim);
 
   // The follwing declares the 12 stimuli locations for a scene
-  var twelvePositions = jsPsych.randomization.sample(referenceArray, 12);
-  console.log("twelvePositions: "+ twelvePositions);
-  var tPosition = [twelvePositions[0]];
-  console.log("tPosition = "+ tPosition);
-  var lPositions = twelvePositions.slice(1,12);
-  console.log("lPositions = "+ lPositions);
+
+  var oldScene = new Array();
+
+  // 12 sets of tPositions and lPositions
+  for (var i = 0; i < 12; i++) {
+    var twelvePositions = jsPsych.randomization.sample(referenceArray, 12);
+    console.log("twelvePositions: "+ twelvePositions);
+    var tPosition = [twelvePositions[0]];
+    console.log("tPosition = "+ tPosition);
+    var lPositions = twelvePositions.slice(1,12);
+    console.log("lPositions = "+ lPositions);
+
+    oldScene[i] = { scene: {
+      'Tstim' : tPosition ,
+      'Lstim' : lPositions }};
+    console.log(oldScene);
+
+  }
 
   // FUNCTION: inArray
   // The following function checks whether a number exists within an 
@@ -127,6 +139,7 @@ function script() {
   // OUTPUT: A scene with an image in all of the img id's specified in the 
   // input array.
   function generateScene(Larray, Tposition, sceneName) {
+    var scene = sceneName;
     for(var i =0; i < rows; i++) { 
       html += '<div class="row">';
       for(var h=0; h< cols; h++) { 
@@ -139,13 +152,20 @@ function script() {
         html += '</div>'; 
     }
     // Save the scene in the scene JSON onbject
-    parsedSceneName.scenes.sceneName = html;
-    console.log(parsedSceneName);
+    // parsedSceneName.scenes.push({scene: '<div id="scene">' + html +  '</div>'});
+    // console.log(parsedSceneName);
+
+    htmlRecord[sceneName] = '<div id="scene">' + html +  '</div>';
+    console.log(htmlRecord);
   }
+
+
 
   var exampleArray = ["1","2","3","4","20"];
 
   generateScene(lPositions, tPosition, "EXAMPLE");
+
+  console.log(parsedSceneName.scenes)
 
   var generalScene = '<div id="scene">' + html +  '</div>';
 
@@ -176,17 +196,17 @@ function script() {
     is_html: true
   }
 
-  var debreif = {
+  var debrief = {
     type: 'single-stim',
     choices: [32], // Spacebar
     stimulus: "Thank you for participating in this study.  Some of the specific displays of the letters were repeated during the experiment though people may not notice that.  The purpose was to see if those repetitions cause people to respond more quickly due to incidental learning as suggested by previous research."
   }
 
-
   var scene1 = {
     type: 'single-stim',
     choices: [32], // Spacebar
-    stimulus: generalScene,
+    // stimulus: parsedSceneName.scenes[0].scene,
+    stimulus: htmlRecord.EXAMPLE,
     is_html: true
   }
 
