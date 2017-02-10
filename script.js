@@ -176,6 +176,13 @@ function script() {
     is_html: true
   }
 
+  var debreif = {
+    type: 'single-stim',
+    choices: [32], // Spacebar
+    stimulus: "Thank you for participating in this study.  Some of the specific displays of the letters were repeated during the experiment though people may not notice that.  The purpose was to see if those repetitions cause people to respond more quickly due to incidental learning as suggested by previous research."
+  }
+
+
   var scene1 = {
     type: 'single-stim',
     choices: [32], // Spacebar
