@@ -2,19 +2,15 @@ function script() {
 
   // Grid variable declarations
   var cols = 8; 
-  var rows = 6; 
-  var html = ""; 
+  var rows = 6;  
   var counter = 0;
   var counterArray = new Array();
   var htmlRecord = new Array();
-
   // Grid reference array
   var referenceArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47];
-
   // JSON object to hold generated scenes
   var objectsceneName = '{"scenes": []}';
   var parsedSceneName = JSON.parse(objectsceneName);
-
   // STIMULI
   /////////////////////// Red Stimuli
   var RedimgArrayL = new Array();
@@ -27,7 +23,6 @@ function script() {
   // T
   RedimgArrayT[0] = 'images/Red/T/L.png';
   RedimgArrayT[1] = 'images/Red/T/R.png';
-
   /////////////////////// Blue stimuli
   var BlueimgArrayL = new Array();
   var BlueimgArrayT = new Array();
@@ -39,7 +34,6 @@ function script() {
   // T
   BlueimgArrayT[0] = 'images/Blue/T/L.png';
   BlueimgArrayT[1] = 'images/Blue/T/R.png';
-
   /////////////////////// Green Stimuli
   var GreenimgArrayL = new Array();
   var GreenimgArrayT = new Array();
@@ -51,7 +45,6 @@ function script() {
   // T
   GreenimgArrayT[0] = 'images/Green/T/L.png';
   GreenimgArrayT[1] = 'images/Green/T/R.png';
-
   ///////////////////////  Yellow Stimuli
   // Yellow L Stimuli (4 Total)
   var YellowimgArrayL = new Array();
@@ -72,31 +65,115 @@ function script() {
   var randomL = allLStim[randomLstim];
 
   // ALL T STIMULI
+ var allLeftTstim = YellowimgArrayT.slice(0,1).concat((BlueimgArrayT.slice(0,1)),(GreenimgArrayT.slice(0,1)),(RedimgArrayT.slice(0,1)));
+ console.log("all l :"+ allLeftTstim)
+
+ var allRightTstim = YellowimgArrayT.slice(1,2).concat((BlueimgArrayT.slice(1,2)),(GreenimgArrayT.slice(1,2)),(RedimgArrayT.slice(1,2)));
+ console.log("all r :"+ allRightTstim)
+
   var allTStim = YellowimgArrayT.concat(BlueimgArrayT,GreenimgArrayT,RedimgArrayT);
-  // console.log("all t stim is: "+ allTStim)
   var randomTstim = parseInt(Math.random()*allTStim.length);
   var randomT = allTStim[randomTstim];
   // console.log("random is :"+randomTstim);
 
   // The follwing declares the 12 stimuli locations for a scene
+  var scene = new Array();
+  // var newScene = new Array();
 
-  var oldScene = new Array();
-
-  // 12 sets of tPositions and lPositions
-  for (var i = 0; i < 12; i++) {
-    var twelvePositions = jsPsych.randomization.sample(referenceArray, 12);
-    console.log("twelvePositions: "+ twelvePositions);
-    var tPosition = [twelvePositions[0]];
-    console.log("tPosition = "+ tPosition);
-    var lPositions = twelvePositions.slice(1,12);
-    console.log("lPositions = "+ lPositions);
-
-    oldScene[i] = { scene: {
-      'Tstim' : tPosition ,
-      'Lstim' : lPositions }};
-    console.log(oldScene);
-
+  function coinFlip() {
+    return (Math.floor(Math.random() * 2) == 0) ? 'l' : 'r';
   }
+
+  // alert(Math.floor(Math.random() * 2) ? 'l' : 'r');
+
+  var allTpositions = jsPsych.randomization.sample(referenceArray, 24);
+  var TOLD = allTpositions.slice(0,12);
+  var TNEW = allTpositions.slice(12,24);
+  // console.log("tpositins: " +allTpositions)
+  console.log("tpositinsOLD: " +TOLD)
+  console.log("tpositinsNEW: " +TNEW)
+
+function arr_diff (a1, a2) {
+
+    var a = [], diff = [];
+
+    for (var i = 0; i < a1.length; i++) {
+        a[a1[i]] = true;
+    }
+
+    for (var i = 0; i < a2.length; i++) {
+        if (a[a2[i]]) {
+            delete a[a2[i]];
+        } else {
+            a[a2[i]] = true;
+        }
+    }
+
+    for (var k in a) {
+        diff.push(k);
+    }
+
+    return diff;
+};
+
+
+
+  // Creates OLD array of 12 sets of t & l Positions
+  for (var i = 0; i < 12; i++) {
+  // var twelvePositions = jsPsych.randomization.sample(referenceArray, 12);
+  var twelvePositions = TOLD;
+  // console.log("twelvePositions: "+ twelvePositions);
+  var tPosition = [twelvePositions[i]];
+  // console.log("tPosition = "+ tPosition);
+
+  var allpossibleLPositions = arr_diff(referenceArray, tPosition);
+  // console.log("diff: "+allpossibleLPositions);
+
+  var lPositions = jsPsych.randomization.sample(allpossibleLPositions, 11);
+  // console.log("lPositions = "+ lPositions);
+
+  var coinResult =  coinFlip();
+
+  scene[i] = { data: {
+    'Tstim' : tPosition ,
+    'Lstim' : lPositions ,
+    'orientation' : coinResult,
+    'oldORnew' : "old"},
+    'html' : ""};
+  }
+
+
+
+  function generateNew() {
+    for (var i = 0; i < 12; i++) {
+      // var twelvePositions = jsPsych.randomization.sample(referenceArray, 12);
+      var twelvePositions = TNEW;
+      // console.log("twelvePositions: "+ twelvePositions);
+      var tPosition = [twelvePositions[i]];
+      // console.log("tPosition = "+ tPosition);
+
+      var allpossibleLPositions = arr_diff(referenceArray, tPosition);
+      // console.log("diff: "+allpossibleLPositions);
+
+      var lPositions = jsPsych.randomization.sample(allpossibleLPositions, 11);
+      // console.log("lPositions = "+ lPositions);
+
+      var coinResult =  coinFlip();
+
+
+      scene[i+12] = { data: {
+        'Tstim' : tPosition ,
+        'Lstim' : lPositions ,
+        'orientation' : coinResult,
+        'oldORnew' : "new"},
+        'html' : "", };
+    }
+  }
+
+  generateNew();
+
+
+
 
   // FUNCTION: inArray
   // The following function checks whether a number exists within an 
@@ -114,16 +191,24 @@ function script() {
   // that of a stimulus coutner. 
   // If it does, checks and places a random stimulus 
   // image in that img box. 
-  function inCheck(imageSRC, myArray) {
+  function inCheck(imageSRC, myArray, tOrientation) {
+
     if (imageSRC == "t"){
-      if (inArray(counter, myArray)) {
-        var randomTstim = parseInt(Math.random()*allTStim.length);
-        var randomT = allTStim[randomTstim];
-        return randomT;
+
+      if ((inArray(counter, myArray)) && (tOrientation == "l")) {
+        var randomTstim = parseInt(Math.random()*allLeftTstim.length);
+        var randomLeftT = allLeftTstim[randomTstim];
+        return randomLeftT;
+
+      } else if ((inArray(counter, myArray)) && (tOrientation == "r")){
+        var randomTstim = parseInt(Math.random()*allRightTstim.length);
+        var randomRightT = allRightTstim[randomTstim];
+        return randomRightT;
       } else {
-        return "";
+          return '';
       }
-    } else {
+
+    } else if (imageSRC == "l") {
       if (inArray(counter, myArray)) {
         var randomLstim = parseInt(Math.random()*allLStim.length);
         var randomL = allLStim[randomLstim];
@@ -134,50 +219,51 @@ function script() {
     }
   }
 
+
+
   // FUNCTION: generateScene
   // INPUT: array, imageSRC, sceneName
   // OUTPUT: A scene with an image in all of the img id's specified in the 
   // input array.
-  function generateScene(Larray, Tposition, sceneName) {
-    var scene = sceneName;
+
+  // console.log(scene);
+
+  function generateScene(Larray, Tposition, tOrientation) {
+    var html = '';
+
     for(var i =0; i < rows; i++) { 
+
       html += '<div class="row">';
       for(var h=0; h< cols; h++) { 
-         var imgresult = inCheck("l", Larray) || inCheck("t", Tposition);
-         html += "<div class='square'>"+ "<div class='innerSquare'>" + '<img id="'+counter+'" src="'+imgresult+'"></img>' + '</div>' + '</div>';
+         var imgresult = inCheck("l", Larray, tOrientation) || inCheck("t", Tposition, tOrientation);
+         html += "<div class='square'>"+ "<div class='innerSquare'>" + '<img id="'+counter+'" src="'+imgresult+'" style="top: calc(50% - 20px); left(50% - 20px);"></img>' + '</div>' + '</div>';
          counterArray[counter] = counter;
-         // console.log(counterArray);
          counter = counter + 1;
       } 
         html += '</div>'; 
     }
+    counter = 0;
     // Save the scene in the scene JSON onbject
-    // parsedSceneName.scenes.push({scene: '<div id="scene">' + html +  '</div>'});
+    // parsedSceneName.scenes.push({scene: '<div id="scene">' + html +  '</div>'});     
     // console.log(parsedSceneName);
+    // htmlRecord[sceneName] 
+    return '<div id="scene">' + html +  '</div>';
+    // console.log(htmlRecord);
+  }
 
-    htmlRecord[sceneName] = '<div id="scene">' + html +  '</div>';
-    console.log(htmlRecord);
+  for (var i = 0; i < scene.length; i++) {
+    // scene[i].scene.html = 
+    // var responsehtml = ((generateScene((scene[i].scene.Lstim), (scene[i].scene.Tstim), (scene[i].scene.orientation))));
+    var responsehtml = (generateScene((scene[i].data.Lstim), (scene[i].data.Tstim), (scene[i].data.orientation)));
+    // console.log(generateScene((scene[i].scene.Lstim), (scene[i].scene.Tstim), (scene[i].scene.orientation)));
+    // console.log(responsehtml);
+    scene[i].html = responsehtml;
   }
 
 
-
-  var exampleArray = ["1","2","3","4","20"];
-
-  generateScene(lPositions, tPosition, "EXAMPLE");
-
-  console.log(parsedSceneName.scenes)
-
-  var generalScene = '<div id="scene">' + html +  '</div>';
+  console.log(scene);
 
 
-  // Choose the 24 TARGET positions
-  // var TchosenPositions = jsPsych.randomization.sample(counterArray, 24);
-  // console.log('All T positions: '+ TchosenPositions);
-  // var oldTchosenPositions = TchosenPositions.slice(0,12);
-  // console.log('Old: ' + oldTchosenPositions);
-  // var newTchosenPositions = TchosenPositions.slice(12,25);
-  // console.log('New: ' + newTchosenPositions);
-  // console.log(counterArray);
 
 
   var consentForm = {
@@ -202,21 +288,46 @@ function script() {
     stimulus: "Thank you for participating in this study.  Some of the specific displays of the letters were repeated during the experiment though people may not notice that.  The purpose was to see if those repetitions cause people to respond more quickly due to incidental learning as suggested by previous research."
   }
 
-  var scene1 = {
-    type: 'single-stim',
-    choices: [32], // Spacebar
-    // stimulus: parsedSceneName.scenes[0].scene,
-    stimulus: htmlRecord.EXAMPLE,
-    is_html: true
+  var block = {
+    timeline: [{
+      type: 'single-stim',
+      choices: [70,72], // Spacebar
+      stimulus: jsPsych.timelineVariable('html'),
+      is_html: true,
+      data: jsPsych.timelineVariable('data'),
+    }],
+    timeline_variables: scene,
+    randomize_order: true
   }
+
+
+  //   on_finish: function(data) {
+  //     if (oldScene[10].scene.orientation == "l") {
+  //       if((jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f') == data.key_press)){
+  //         return true;
+  //       }
+  //       else {
+  //         return false;
+  //       }
+  //     } else if (oldScene[10].scene.orientation == "r") {
+  //       if((jsPsych.pluginAPI.convertKeyCharacterToKeyCode('h') == data.key_press)){
+  //         return true;
+  //       }
+  //       else {
+  //         return false;
+  //       }
+  //     }
+  //   }
+  // }
+
 
   var node = {
     type: 'single-stim',
-    timeline: [scene1],
+    timeline: [],
   }
 
   jsPsych.init({
-    timeline: [node],
+    timeline: [block],
     on_finish: function() {
       jsPsych.data.displayData();
     },
