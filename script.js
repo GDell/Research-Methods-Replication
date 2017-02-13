@@ -74,49 +74,37 @@ function script() {
   var allTStim = YellowimgArrayT.concat(BlueimgArrayT,GreenimgArrayT,RedimgArrayT);
   var randomTstim = parseInt(Math.random()*allTStim.length);
   var randomT = allTStim[randomTstim];
-  // console.log("random is :"+randomTstim);
 
   // The follwing declares the 12 stimuli locations for a scene
   var scene = new Array();
-  // var newScene = new Array();
 
   function coinFlip() {
     return (Math.floor(Math.random() * 2) == 0) ? 'l' : 'r';
   }
 
-  // alert(Math.floor(Math.random() * 2) ? 'l' : 'r');
-
   var allTpositions = jsPsych.randomization.sample(referenceArray, 24);
   var TOLD = allTpositions.slice(0,12);
   var TNEW = allTpositions.slice(12,24);
-  // console.log("tpositins: " +allTpositions)
-  console.log("tpositinsOLD: " +TOLD)
-  console.log("tpositinsNEW: " +TNEW)
+  // console.log("tpositinsOLD: " +TOLD)
+  // console.log("tpositinsNEW: " +TNEW)
 
-function arr_diff (a1, a2) {
-
-    var a = [], diff = [];
-
-    for (var i = 0; i < a1.length; i++) {
-        a[a1[i]] = true;
-    }
-
-    for (var i = 0; i < a2.length; i++) {
-        if (a[a2[i]]) {
-            delete a[a2[i]];
-        } else {
-            a[a2[i]] = true;
-        }
-    }
-
-    for (var k in a) {
-        diff.push(k);
-    }
-
-    return diff;
-};
-
-
+  function arr_diff (a1, a2) {
+      var a = [], diff = [];
+      for (var i = 0; i < a1.length; i++) {
+          a[a1[i]] = true;
+      }
+      for (var i = 0; i < a2.length; i++) {
+          if (a[a2[i]]) {
+              delete a[a2[i]];
+          } else {
+              a[a2[i]] = true;
+          }
+      }
+      for (var k in a) {
+          diff.push(k);
+      }
+      return diff;
+  };
 
   // Creates OLD array of 12 sets of t & l Positions
   for (var i = 0; i < 12; i++) {
@@ -143,8 +131,6 @@ function arr_diff (a1, a2) {
     'html' : ""};
   }
 
-
-
   function generateNew() {
     for (var i = 0; i < 12; i++) {
       // var twelvePositions = jsPsych.randomization.sample(referenceArray, 12);
@@ -152,16 +138,11 @@ function arr_diff (a1, a2) {
       // console.log("twelvePositions: "+ twelvePositions);
       var tPosition = [twelvePositions[i]];
       // console.log("tPosition = "+ tPosition);
-
       var allpossibleLPositions = arr_diff(referenceArray, tPosition);
       // console.log("diff: "+allpossibleLPositions);
-
       var lPositions = jsPsych.randomization.sample(allpossibleLPositions, 11);
       // console.log("lPositions = "+ lPositions);
-
       var coinResult =  coinFlip();
-
-
       scene[i+12] = { data: {
         'Tstim' : tPosition ,
         'Lstim' : lPositions ,
@@ -174,11 +155,7 @@ function arr_diff (a1, a2) {
     tPosition = "";
     lPositions = "";
   }
-
   generateNew();
-
-
-
 
   // FUNCTION: inArray
   // The following function checks whether a number exists within an 
@@ -197,14 +174,11 @@ function arr_diff (a1, a2) {
   // If it does, checks and places a random stimulus 
   // image in that img box. 
   function inCheck(imageSRC, myArray, tOrientation) {
-
     if (imageSRC == "t"){
-
       if ((inArray(counter, myArray)) && (tOrientation == "l")) {
         var randomTstim = parseInt(Math.random()*allLeftTstim.length);
         var randomLeftT = allLeftTstim[randomTstim];
         return randomLeftT;
-
       } else if ((inArray(counter, myArray)) && (tOrientation == "r")){
         var randomTstim = parseInt(Math.random()*allRightTstim.length);
         var randomRightT = allRightTstim[randomTstim];
@@ -212,7 +186,6 @@ function arr_diff (a1, a2) {
       } else {
           return '';
       }
-
     } else if (imageSRC == "l") {
       if (inArray(counter, myArray)) {
         var randomLstim = parseInt(Math.random()*allLStim.length);
@@ -224,15 +197,10 @@ function arr_diff (a1, a2) {
     }
   }
 
-
-
   // FUNCTION: generateScene
   // INPUT: array, imageSRC, sceneName
   // OUTPUT: A scene with an image in all of the img id's specified in the 
   // input array.
-
-  // console.log(scene);
-
   function generateScene(Larray, Tposition, tOrientation) {
     var html = '';
 
@@ -248,12 +216,8 @@ function arr_diff (a1, a2) {
         html += '</div>'; 
     }
     counter = 0;
-    // Save the scene in the scene JSON onbject
-    // parsedSceneName.scenes.push({scene: '<div id="scene">' + html +  '</div>'});     
-    // console.log(parsedSceneName);
-    // htmlRecord[sceneName] 
+
     return '<div id="scene">' + html +  '</div>';
-    // console.log(htmlRecord);
   }
 
   for (var i = 0; i < scene.length; i++) {
