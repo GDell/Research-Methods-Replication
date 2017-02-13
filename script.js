@@ -243,21 +243,21 @@ function script() {
   var prompt1 = {
     type: 'single-stim',
     choices: [32], // Spacebar
-    stimulus: '<p class="center-content">You will be presented with an array of stimuli, T’s and L’s. They will be of varying colors (Red, Yellow, Blue, and Green) and the stimuli will be located in various locations and orientations. After reading these instructions, please press the spacebar to continue. At the start of each trial, a fixation dot will appear in the center of the screen. Please focus your eyes on the fixation dot when it appears. After a brief period of time, an image consisting of several letters oriented in different directions will appear. Most of the letters will be L’s, but there will be one T among them. When you see the array of letters appear on the screen, please locate the T and indicate whether the bottom of the T is oriented 90 degrees to the left, or 90 degrees to the right. To indicate “left”, press “z”. To indicate “right”, press “/”. Please complete this as quickly and accurately as possible. You will hear a short, high-pitched chirp if your answer is correct, or a long, low-pitched tone if your answer is incorrect. Each trial will stop once the key “z” or “/” is pressed. During the audio feedback, you will see a blank, white screen. After a brief period of time, the fixation dot will appear once more to indicate the start of the next trial. After 30 trials, there will be a break lasting a minimum of 10 seconds, but you may rest for longer if you wish. When you are ready, please press the spacebar to start the next round of trials. </p>',
+    stimulus: '<p class="center-content">In this study you will be presented with a series of scenes containing various forms of an "L" shaped stimuli and one left or right pointing "T" stimuli. The stimuli will be of varying colors (Red, Yellow, Blue, and Green) and will be located in various locations and orientations in each scene. When you see each scene appear on the screen, please do your best to locate the "T" stimuli as fast as possible and indicate whether the bottom of the T is oriented 90 degrees to the left, or 90 degrees to the right. To indicate left orientation, press the key f. To indicate right orientation, press the key h. Each trial will stop once you respond. After responding, you will hear a short, high-pitched chirp if your answer was correct, or a long, low-pitched tone if your answer was incorrect.  After a brief period of time, the next scene will appear and the following trial will begin. There will be a total of 3 blocks, each composed of 24 trials or scenes. In addition, you will recieve a break between each block. When you are ready, please press the spacebar to begin block one of the experiment.</p>',
     is_html: true
   }
 
   var debrief = {
     type: 'single-stim',
     choices: [32], // Spacebar
-    stimulus: '<p class="center-content">Thank you for participating in this study.  Some of the specific displays of the letters were repeated during the experiment though people may not notice that.  The purpose was to see if those repetitions cause people to respond more quickly due to incidental learning as suggested by previous research."<p class="center-content">',
+    stimulus: '<p class="center-content">Thank you for participating in this study.  12 specific scenes were repeatedly shown in a mix of randomly generated scenes throughout each block of this experiment. The purpose was to see if, due to incidental learning, participants would respond faster to the repeated scenes than the randomly generated scenes."<p class="center-content">',
     is_html: true
   }
 
   var takeAbreak = {
     type: 'single-stim',
     choices: [32], // Spacebar
-    stimulus: "Take a break",
+    stimulus: "Take a break. Press the spacebar when you are ready to continue on to the next block of 24 trials.",
     on_finish: function(data) {
       generateNew();
       for (var i = 0; i < scene.length; i++) {
