@@ -138,6 +138,7 @@ function arr_diff (a1, a2) {
     'Tstim' : tPosition ,
     'Lstim' : lPositions ,
     'orientation' : coinResult,
+    'rightORwrong' : "",
     'oldORnew' : "old"},
     'html' : ""};
   }
@@ -165,9 +166,13 @@ function arr_diff (a1, a2) {
         'Tstim' : tPosition ,
         'Lstim' : lPositions ,
         'orientation' : coinResult,
+        'rightORwrong' : "",
         'oldORnew' : "new"},
-        'html' : "", };
+        'html' : "",
+         };
     }
+    tPosition = "";
+    lPositions = "";
   }
 
   generateNew();
@@ -252,11 +257,9 @@ function arr_diff (a1, a2) {
   }
 
   for (var i = 0; i < scene.length; i++) {
-    // scene[i].scene.html = 
-    // var responsehtml = ((generateScene((scene[i].scene.Lstim), (scene[i].scene.Tstim), (scene[i].scene.orientation))));
+
     var responsehtml = (generateScene((scene[i].data.Lstim), (scene[i].data.Tstim), (scene[i].data.orientation)));
-    // console.log(generateScene((scene[i].scene.Lstim), (scene[i].scene.Tstim), (scene[i].scene.orientation)));
-    // console.log(responsehtml);
+
     scene[i].html = responsehtml;
   }
 
@@ -264,13 +267,11 @@ function arr_diff (a1, a2) {
   console.log(scene);
 
 
-
-
   var consentForm = {
     type: 'single-stim',
     // stimulus: 'jsPsych/examples/img/happy_face_1.jpg',
     choices: [32], // Spacebar
-    stimulus: '<p class="center-content">Press spacebar to continue</p>',
+    stimulus: '<p class="center-content">Consent form here. Press spacebar to continue. </p>',
     // prompt: "YO", 
     is_html: true
   }
@@ -285,9 +286,27 @@ function arr_diff (a1, a2) {
   var debrief = {
     type: 'single-stim',
     choices: [32], // Spacebar
-    stimulus: "Thank you for participating in this study.  Some of the specific displays of the letters were repeated during the experiment though people may not notice that.  The purpose was to see if those repetitions cause people to respond more quickly due to incidental learning as suggested by previous research."
+    stimulus: '<p class="center-content">Thank you for participating in this study.  Some of the specific displays of the letters were repeated during the experiment though people may not notice that.  The purpose was to see if those repetitions cause people to respond more quickly due to incidental learning as suggested by previous research."<p class="center-content">',
+    is_html: true
   }
 
+  var takeAbreak = {
+    type: 'single-stim',
+    choices: [32], // Spacebar
+    stimulus: "Take a break",
+    on_finish: function(data) {
+      generateNew();
+      for (var i = 0; i < scene.length; i++) {
+
+        var responsehtml = (generateScene((scene[i].data.Lstim), (scene[i].data.Tstim), (scene[i].data.orientation)));
+
+        scene[i].html = responsehtml;
+      }
+      console.log(scene);
+    },
+    is_html: true
+  }
+  
   var block = {
     timeline: [{
       type: 'single-stim',
@@ -295,39 +314,37 @@ function arr_diff (a1, a2) {
       stimulus: jsPsych.timelineVariable('html'),
       is_html: true,
       data: jsPsych.timelineVariable('data'),
-    }],
+      on_finish: function(data) {
+        console.log(data.orientation);
+        if (data.orientation == "l") {
+          if((jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f') == data.key_press)){
+            data.rightORwrong = "RIGHT";
+          }
+          else {
+            data.rightORwrong = "WRONG";
+          }
+          } else if (data.orientation == "r") {
+              if((jsPsych.pluginAPI.convertKeyCharacterToKeyCode('h') == data.key_press)){
+                data.rightORwrong = "RIGHT";
+              }
+              else {
+                  data.rightORwrong = "WRONG";
+                }
+              }
+            }
+      }
+    ],
     timeline_variables: scene,
     randomize_order: true
   }
 
-
-  //   on_finish: function(data) {
-  //     if (oldScene[10].scene.orientation == "l") {
-  //       if((jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f') == data.key_press)){
-  //         return true;
-  //       }
-  //       else {
-  //         return false;
-  //       }
-  //     } else if (oldScene[10].scene.orientation == "r") {
-  //       if((jsPsych.pluginAPI.convertKeyCharacterToKeyCode('h') == data.key_press)){
-  //         return true;
-  //       }
-  //       else {
-  //         return false;
-  //       }
-  //     }
-  //   }
-  // }
-
-
   var node = {
     type: 'single-stim',
-    timeline: [],
+    timeline: [consentForm,prompt1,block,takeAbreak,block,takeAbreak,block,debrief],
   }
 
   jsPsych.init({
-    timeline: [block],
+    timeline: [node], //block 
     on_finish: function() {
       jsPsych.data.displayData();
     },
